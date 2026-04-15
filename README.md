@@ -21,11 +21,12 @@ Takes a single blog topic as input and automatically:
 ## Architecture
 ```
 Topic Input
-→ AI Content Engine (Google Gemini)
-→ Blog Post (400-600w) + 3 Newsletter Versions
-→ HubSpot CRM (9 mock contacts, segmented by persona)
-→ campaign_history.json
-→ Analytics Engine → AI Insight + Next Topic Recommendations
+→ AI Content Engine (Gemini)
+→ Blog + Persona-based Newsletters
+→ HubSpot CRM (contacts + campaign logging)
+→ campaign_history.json (storage)
+→ Analytics Engine (performance simulation)
+→ AI Insight + Next Topic Recommendations
 → Streamlit Dashboard
 ```
 ---
@@ -49,7 +50,7 @@ Performance ranges are calibrated per persona based on realistic B2B email bench
 
 | Tool | Purpose |
 |---|---|
-| Google Gemini API (gemini-1.5-flash) | Blog + newsletter generation, AI insights |
+| Google Gemini API (gemini-2.5-flash) | Blog + newsletter generation, AI insights |
 | HubSpot CRM API | Contact management, persona segmentation |
 | Streamlit | Web dashboard UI |
 | Altair | Performance charts |
