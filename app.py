@@ -355,7 +355,7 @@ if st.session_state.analytics_result:
 # ── Header ────────────────────────────────────────────────────────────────────
 
 st.markdown(
-    "<h1>🧠 NovaMind Content Pipeline</h1>"
+    "<h1>NovaMind Content Pipeline</h1>"
     "<p style='color:#64748b; margin:4px 0 20px; font-size:0.88rem;'>"
     "End-to-end content automation: Generate → Distribute → Analyze"
     "</p>",

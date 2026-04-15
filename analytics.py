@@ -89,42 +89,32 @@ def simulate_performance() -> dict:
     """
     Simulate realistic newsletter performance metrics for each persona.
 
-    Strategy:
-      1. Draw a single campaign_factor (0.8–1.2) shared across all personas.
-         This shifts every metric up or down together, simulating a strong or
-         weak campaign — so some runs produce universally high numbers and
-         others universally low ones.
-      2. Add per-metric noise (±5pp for rates) on top of the shifted baseline
-         to give each persona its own variation within the run.
-      3. Clip to hard bounds so nothing goes outside plausible ranges.
+    Each persona × metric combination gets its own independent noise draw,
+    so open rate, click rate, and unsubscribe rate charts each have a
+    different shape — one persona might have a high open rate but average
+    click rate, while another lands the opposite way.
 
     The persona hierarchy (Marketing Manager > Agency Founder > Ops Manager)
-    is maintained by the baseline gaps being wider than the noise range.
+    is preserved because the baseline gaps are wider than the noise range.
 
     Returns a dict keyed by persona name, each value containing:
         open_rate        — fraction (e.g. 0.55 = 55%)
         click_rate       — fraction
         unsubscribe_rate — fraction
     """
-    # One campaign-level factor shifts all personas together this run
-    campaign_factor = random.uniform(0.8, 1.2)
-
     performance = {}
 
     for persona, baseline in PERSONA_BASELINES.items():
         metrics = {}
         for metric, base_value in baseline.items():
-            # Apply campaign factor, then add per-metric noise
-            shifted   = base_value * campaign_factor
+            # Independent noise per persona per metric
             noise     = random.uniform(-NOISE[metric], NOISE[metric])
-            raw_value = shifted + noise
-            # Clip to hard bounds
+            raw_value = base_value + noise
             lo, hi    = BOUNDS[metric]
             metrics[metric] = round(max(lo, min(hi, raw_value)), 4)
         performance[persona] = metrics
 
-    print(f"[analytics] Performance simulated (campaign_factor={campaign_factor:.2f}) "
-          f"for {list(performance.keys())}")
+    print(f"[analytics] Performance simulated for {list(performance.keys())}")
     return performance
 
 
