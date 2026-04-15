@@ -1,0 +1,17 @@
+# Environment variables — never commit API keys
+.env
+
+# Generated JSON data files — runtime artifacts, not source code
+latest_content.json
+campaign_history.json
+analytics_history.json
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
