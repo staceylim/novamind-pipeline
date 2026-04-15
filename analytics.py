@@ -59,9 +59,9 @@ PERSONA_BASELINES = {
 
 # Maximum noise added in either direction (±) for each metric
 NOISE = {
-    "open_rate":        0.025,   # ±2.5 percentage points
-    "click_rate":       0.020,   # ±2.0 percentage points
-    "unsubscribe_rate": 0.003,   # ±0.3 percentage points
+    "open_rate":        0.05,    # ±5 percentage points
+    "click_rate":       0.05,    # ±5 percentage points
+    "unsubscribe_rate": 0.005,   # ±0.5 percentage points
 }
 
 # Hard bounds — values are clipped to these after noise is applied
@@ -89,33 +89,42 @@ def simulate_performance() -> dict:
     """
     Simulate realistic newsletter performance metrics for each persona.
 
-    Strategy: start from a fixed baseline per persona, add small random noise,
-    then clip to hard bounds. This ensures:
-      - Each run produces slightly different numbers (realistic variance)
-      - The persona hierarchy (Marketing Manager > Agency Founder > Ops Manager)
-        is preserved across runs
-      - Values stay within plausible email marketing ranges
-      - CTR (click_rate / open_rate) and bar charts always have meaningful spread
+    Strategy:
+      1. Draw a single campaign_factor (0.8–1.2) shared across all personas.
+         This shifts every metric up or down together, simulating a strong or
+         weak campaign — so some runs produce universally high numbers and
+         others universally low ones.
+      2. Add per-metric noise (±5pp for rates) on top of the shifted baseline
+         to give each persona its own variation within the run.
+      3. Clip to hard bounds so nothing goes outside plausible ranges.
+
+    The persona hierarchy (Marketing Manager > Agency Founder > Ops Manager)
+    is maintained by the baseline gaps being wider than the noise range.
 
     Returns a dict keyed by persona name, each value containing:
         open_rate        — fraction (e.g. 0.55 = 55%)
         click_rate       — fraction
         unsubscribe_rate — fraction
     """
+    # One campaign-level factor shifts all personas together this run
+    campaign_factor = random.uniform(0.8, 1.2)
+
     performance = {}
 
     for persona, baseline in PERSONA_BASELINES.items():
         metrics = {}
         for metric, base_value in baseline.items():
-            # Add symmetric noise: uniform random in [-noise, +noise]
-            noise      = random.uniform(-NOISE[metric], NOISE[metric])
-            raw_value  = base_value + noise
-            # Clip to hard bounds so nothing absurd slips through
-            lo, hi     = BOUNDS[metric]
+            # Apply campaign factor, then add per-metric noise
+            shifted   = base_value * campaign_factor
+            noise     = random.uniform(-NOISE[metric], NOISE[metric])
+            raw_value = shifted + noise
+            # Clip to hard bounds
+            lo, hi    = BOUNDS[metric]
             metrics[metric] = round(max(lo, min(hi, raw_value)), 4)
         performance[persona] = metrics
 
-    print(f"[analytics] Performance simulated for {list(performance.keys())}")
+    print(f"[analytics] Performance simulated (campaign_factor={campaign_factor:.2f}) "
+          f"for {list(performance.keys())}")
     return performance
 
 
