@@ -91,6 +91,7 @@ streamlit run app.py
 
 ## File Structure
 
+```
 novamind-pipeline/
 ├── app.py              # Streamlit dashboard
 ├── pipeline.py         # AI content generation + HubSpot integration
@@ -98,6 +99,7 @@ novamind-pipeline/
 ├── requirements.txt    # Dependencies
 ├── .env                # API keys (not tracked)
 └── .gitignore
+```
 
 ---
 
