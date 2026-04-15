@@ -19,7 +19,7 @@ Takes a single blog topic as input and automatically:
 ---
 
 ## Architecture
-
+```
 Topic Input
 → AI Content Engine (Google Gemini)
 → Blog Post (400-600w) + 3 Newsletter Versions
@@ -27,7 +27,7 @@ Topic Input
 → campaign_history.json
 → Analytics Engine → AI Insight + Next Topic Recommendations
 → Streamlit Dashboard
-
+```
 ---
 
 ## Personas
